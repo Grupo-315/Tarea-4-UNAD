@@ -1,91 +1,56 @@
-# Importamos la clase base Entidad
+# Importa la clase Entidad desde el archivo entidad.py
+# Esta será la clase padre de Cliente
 from modelos.entidad import Entidad
 
-# Importamos la excepción personalizada
+# Importa la excepción personalizada ClienteError
+# Se usa para mostrar errores relacionados con clientes
 from excepciones.errores import ClienteError
 
 
+# Se crea la clase Cliente heredando de Entidad
 class Cliente(Entidad):
-    """
-    Clase que representa un cliente del sistema.
-    Hereda de Entidad (aplicando herencia).
-    """
 
+    # Método constructor de la clase
+    # Se ejecuta automáticamente al crear un objeto Cliente
     def __init__(self, id, nombre, email):
-        """
-        Constructor de la clase Cliente
 
-        Parámetros:
-        id (int): Identificador del cliente
-        nombre (str): Nombre del cliente
-        email (str): Correo electrónico del cliente
-        """
-
-        # Llamamos al constructor de la clase padre (Entidad)
+        # Llama al constructor de la clase padre Entidad
+        # para inicializar el atributo id
         super().__init__(id)
 
-        # =========================
-        # VALIDACIONES (ROBUSTEZ)
-        # =========================
+        # Llama al método set_nombre para validar y guardar el nombre
+        self.set_nombre(nombre)
 
-        # Validamos que el nombre no esté vacío
-        if not nombre or nombre.strip() == "":
-            # Lanzamos una excepción personalizada
-            raise ClienteError("El nombre no puede estar vacío")
+        # Llama al método set_email para validar y guardar el email
+        self.set_email(email)
 
-        # Validamos que el email tenga formato básico
-        if "@" not in email or "." not in email:
-            raise ClienteError("El correo electrónico no es válido")
+    # Método para asignar el nombre del cliente
+    def set_nombre(self, nombre):
 
-        # =========================
-        # ENCAPSULACIÓN
-        # =========================
+        # Verifica que el nombre no esté vacío
+        # strip() elimina espacios en blanco al inicio y final
+        if not nombre.strip():
 
-        # Atributos privados (convención con _)
+            # Si el nombre es inválido, lanza un error personalizado
+            raise ClienteError("Nombre inválido")
+
+        # Guarda el nombre en el atributo protegido _nombre
         self._nombre = nombre
+
+    # Método para asignar el email del cliente
+    def set_email(self, email):
+
+        # Verifica que el correo contenga el símbolo @
+        if "@" not in email:
+
+            # Si el email es inválido, lanza un error personalizado
+            raise ClienteError("Email inválido")
+
+        # Guarda el email en el atributo protegido _email
         self._email = email
 
-    # =========================
-    # MÉTODO PARA MOSTRAR INFO
-    # =========================
+    # Método que retorna la información del cliente en texto
     def mostrar_info(self):
-        """
-        Retorna la información del cliente en formato texto.
 
-        Este método sobrescribe el método abstracto de la clase Entidad.
-        """
-        return f"Cliente: {self._nombre} | Email: {self._email}"
-
-    # =========================
-    # GETTERS (ENCAPSULACIÓN)
-    # =========================
-    def get_nombre(self):
-        """
-        Retorna el nombre del cliente
-        """
-        return self._nombre
-
-    def get_email(self):
-        """
-        Retorna el email del cliente
-        """
-        return self._email
-
-    # =========================
-    # SETTERS (VALIDACIONES)
-    # =========================
-    def set_nombre(self, nuevo_nombre):
-        """
-        Permite modificar el nombre del cliente con validación
-        """
-        if not nuevo_nombre:
-            raise ClienteError("El nombre no puede estar vacío")
-        self._nombre = nuevo_nombre
-
-    def set_email(self, nuevo_email):
-        """
-        Permite modificar el email con validación
-        """
-        if "@" not in nuevo_email:
-            raise ClienteError("Correo inválido")
-        self._email = nuevo_email
+        # Devuelve el nombre y correo en formato de cadena
+        return f"{self._nombre} - {self._email}"
